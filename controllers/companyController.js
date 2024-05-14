@@ -1,9 +1,9 @@
-const { where } = require('sequelize');
 const CompanyDetails = require('./../models/companyDetailsModel');
 const CompanyType = require('./../models/companyTypeModel');
+const outletType = require('./../models/outletTypeModel'); // Ensure this matches the model's filename and export
+const outlet = require('./../models/outletModel');
 const catchAsync = require('./../utils/CatchAsync');
 const AppError = require('./../utils/appError');
-const generateOTP = require('./../helpers/generateAndStoreOTP');
 const generateAndStoreOTP = require('./../helpers/generateAndStoreOTP');
 
 exports.getCompanies = catchAsync(async (req, res, next) => {
@@ -24,7 +24,7 @@ exports.createCompany = catchAsync(async (req, res, next) => {
 
   if (!companyType && !companyName && !(phone || email))
     return next(
-      new AppError('please provide Company Name Phone or Email', 401),
+      new AppError('Please provide Company Name, Phone, or Email', 401),
     );
 
   // Create or find the company type in the database
@@ -36,11 +36,29 @@ exports.createCompany = catchAsync(async (req, res, next) => {
       company_type_name: companyType,
     });
   }
+
   const companyDetails = await CompanyDetails.create({
     company_name: companyName,
     email,
     contact: phone,
     company_type_id: companyTypeRecord.company_type_id,
+  });
+
+  let outletTypeRecord = await outletType.findOne({
+    where: { outlet_type_name: companyType },
+  });
+  if (!outletTypeRecord) {
+    outletTypeRecord = await outletType.create({
+      outlet_type_name: companyType,
+    });
+  }
+
+  const outletRecord = await outlet.create({
+    outlet_name: companyName,
+    email,
+    contact: phone,
+    company_id: companyDetails.company_id,
+    outlet_type_id: outletTypeRecord.outlet_type_id, // Corrected variable name
   });
 
   // Generate and store OTP

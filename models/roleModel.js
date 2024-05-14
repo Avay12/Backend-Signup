@@ -18,7 +18,7 @@ const Role = sequelize.define('Role', {
   deleted_by: DataTypes.INTEGER,
   deleted_date: DataTypes.DATE,
   customer_id: DataTypes.INTEGER,
-  Status: DataTypes.BOOLEAN,
+  Status: { type: DataTypes.BOOLEAN, defaultValue: true },
 });
 
 module.exports = Role;

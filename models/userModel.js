@@ -48,7 +48,7 @@ const User = sequelize.define('User', {
   updated_date: DataTypes.DATE,
   deleted_by: DataTypes.INTEGER,
   deleted_date: DataTypes.DATE,
-  Status: DataTypes.BOOLEAN,
+  Status: { type: DataTypes.BOOLEAN, defaultValue: true },
   otp: DataTypes.INTEGER,
   // otpExpires: DataTypes.DATE,
 });

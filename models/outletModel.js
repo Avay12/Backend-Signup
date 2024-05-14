@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/db');
 const CompanyDetails = require('./companyDetailsModel');
-const OutletType = require('./OutletTypeModel');
+const OutletType = require('./../models/outletTypeModel'); // Ensure correct path and case
 
 const Outlet = sequelize.define('Outlet', {
   outlet_id: {
@@ -29,6 +29,6 @@ const Outlet = sequelize.define('Outlet', {
 });
 
 Outlet.belongsTo(CompanyDetails, { foreignKey: 'company_id' });
-Outlet.belongsTo(OutletType, { foreignKey: 'outlet_type_id' });
+Outlet.belongsTo(OutletType, { foreignKey: 'outlet_type_id' }); // Correct association
 
 module.exports = Outlet;
